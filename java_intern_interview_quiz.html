@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Intern Mock Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f5efe6;
+            --card: #fffdf8;
+            --line: #e6d8c5;
+            --text: #1f2937;
+            --soft: #5b6472;
+            --primary: #0f766e;
+            --primary-soft: #dff5f2;
+            --success: #166534;
+            --success-soft: #dcfce7;
+            --danger: #b91c1c;
+            --danger-soft: #fee2e2;
+            --warn-soft: #fff7e7;
+            --shadow: 0 18px 40px rgba(73, 48, 12, 0.10);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, #fcedcf 0, transparent 28%),
+                radial-gradient(circle at top right, #ddf4ef 0, transparent 26%),
+                linear-gradient(180deg, #f5efe6, #f7f3eb);
+            color: var(--text);
+            padding: 24px;
+        }
+
+        .wrap { max-width: 960px; margin: 0 auto; }
+        .hero, .panel, .summary {
+            background: rgba(255, 253, 248, 0.95);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .hero { padding: 24px; }
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .hero h1 { margin-top: 16px; font-size: 38px; line-height: 1.1; }
+        .hero p { margin-top: 12px; color: var(--soft); line-height: 1.7; max-width: 720px; }
+        .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+
+        .btn, .link-btn {
+            appearance: none;
+            border: 1px solid var(--line);
+            background: #fff;
+            color: var(--text);
+            border-radius: 999px;
+            padding: 12px 16px;
+            font: inherit;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.18s ease, background 0.18s ease;
+        }
+        .btn:hover, .link-btn:hover { transform: translateY(-1px); }
+        .btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+        .layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 18px; margin-top: 18px; }
+        .panel { padding: 20px; align-self: start; position: sticky; top: 16px; }
+        .panel h2 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--soft); }
+        .field { margin-top: 16px; }
+        .field label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 700; }
+        .field select { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; font: inherit; background: #fff; }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .chip {
+            border: 1px solid var(--line);
+            background: #fff;
+            color: var(--soft);
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+        .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+        .stat { padding: 14px; border-radius: 18px; background: var(--warn-soft); border: 1px solid var(--line); }
+        .stat strong { display: block; font-size: 24px; }
+        .stat span { display: block; margin-top: 6px; font-size: 11px; font-weight: 800; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; }
+
+        .panel-actions { display: grid; gap: 10px; margin-top: 16px; }
+        .quiz { background: rgba(255, 253, 248, 0.95); border: 1px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 22px; }
+        .quiz-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .badge { display: inline-block; padding: 8px 12px; border-radius: 999px; background: var(--warn-soft); border: 1px solid var(--line); font-size: 13px; font-weight: 800; color: #9a3412; }
+        .progress-meta { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; font-size: 13px; font-weight: 800; color: var(--soft); }
+        .progress { margin-top: 10px; height: 10px; border-radius: 999px; background: #ede2d2; overflow: hidden; }
+        .progress span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--primary), #14b8a6); transition: width 0.2s ease; }
+        .question { margin-top: 22px; font-size: 28px; line-height: 1.35; font-weight: 800; }
+        .sub { margin-top: 10px; color: var(--soft); line-height: 1.7; }
+        .options { display: grid; gap: 12px; margin-top: 22px; }
+        .option {
+            width: 100%;
+            border: 1px solid var(--line);
+            background: #fff;
+            border-radius: 18px;
+            padding: 16px;
+            text-align: left;
+            cursor: pointer;
+        }
+        .option.selected { border-color: var(--primary); background: var(--primary-soft); }
+        .option.correct { border-color: var(--success); background: var(--success-soft); }
+        .option.wrong { border-color: var(--danger); background: var(--danger-soft); }
+        .option span { display: inline-flex; gap: 12px; align-items: flex-start; line-height: 1.6; font-weight: 700; }
+        .option b {
+            display: inline-flex;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            background: rgba(31, 41, 55, 0.06);
+            flex-shrink: 0;
+            font-size: 13px;
+        }
+        .feedback {
+            display: none;
+            margin-top: 18px;
+            padding: 16px;
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            background: var(--warn-soft);
+        }
+        .feedback.show { display: block; }
+        .feedback.ok { background: var(--success-soft); border-color: rgba(22, 101, 52, 0.18); }
+        .feedback.bad { background: #fff1ec; border-color: rgba(185, 28, 28, 0.16); }
+        .feedback strong { display: block; margin-bottom: 8px; }
+        .feedback p { color: var(--soft); line-height: 1.7; }
+        .quiz-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+
+        .summary { display: none; margin-top: 18px; padding: 22px; }
+        .summary.show { display: block; }
+        .summary h2 { font-size: 30px; line-height: 1.2; }
+        .summary p { margin-top: 12px; color: var(--soft); line-height: 1.7; }
+        .summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+        .summary-box { padding: 16px; border-radius: 18px; border: 1px solid var(--line); background: var(--warn-soft); }
+        .summary-box strong { display: block; font-size: 26px; }
+        .summary-box span { display: block; margin-top: 6px; font-size: 11px; font-weight: 800; color: var(--soft); text-transform: uppercase; }
+        .review { display: grid; gap: 10px; margin-top: 18px; }
+        .review-item { padding: 14px; border-radius: 16px; border: 1px solid var(--line); background: #fff; }
+        .review-item strong { display: block; line-height: 1.6; font-size: 14px; }
+        .review-item span { display: block; margin-top: 8px; color: var(--soft); font-size: 13px; line-height: 1.6; }
+
+        @media (max-width: 900px) {
+            body { padding: 16px; }
+            .layout { grid-template-columns: 1fr; }
+            .panel { position: static; }
+        }
+        @media (max-width: 640px) {
+            .hero, .panel, .quiz, .summary { padding: 18px; border-radius: 20px; }
+            .hero h1 { font-size: 30px; }
+            .question { font-size: 22px; }
+            .summary-grid { grid-template-columns: 1fr; }
+            .hero-actions, .quiz-actions { flex-direction: column; }
+            .btn, .link-btn { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <section class="hero">
+            <span class="hero-badge">Java Intern Mock Quiz</span>
+            <h1>Lam trac nghiem de luyen phan xa phong van.</h1>
+            <p>Trang nay dung cho viec on nhanh theo kieu chon dap an. Ban co the loc theo chu de, tron lai bo de va xem giai thich ngay sau khi tra loi.</p>
+            <div class="hero-actions">
+                <a class="link-btn" href="java_interview_final.html">Xem bo cau hoi day du</a>
+                <a class="link-btn" href="index.html">Ve trang chon che do</a>
+            </div>
+        </section>
+
+        <section class="layout">
+            <aside class="panel">
+                <h2>Cau hinh bo de</h2>
+                <div class="field">
+                    <label for="countSelect">So cau</label>
+                    <select id="countSelect">
+                        <option value="10">10 cau</option>
+                        <option value="15" selected>15 cau</option>
+                        <option value="20">20 cau</option>
+                        <option value="999">Tat ca trong chu de</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Chu de</label>
+                    <div class="chips" id="chips"></div>
+                </div>
+                <div class="stats">
+                    <div class="stat"><strong id="poolStat">0</strong><span>Pool</span></div>
+                    <div class="stat"><strong id="doneStat">0</strong><span>Da lam</span></div>
+                    <div class="stat"><strong id="correctStat">0</strong><span>Dung</span></div>
+                    <div class="stat"><strong id="accStat">0%</strong><span>Do chinh xac</span></div>
+                </div>
+                <div class="panel-actions">
+                    <button class="btn primary" id="startBtn" type="button">Bat dau de moi</button>
+                    <button class="btn" id="shuffleBtn" type="button">Tron lai</button>
+                </div>
+            </aside>
+
+            <div>
+                <section class="quiz" id="quizCard">
+                    <div class="quiz-head">
+                        <span class="badge" id="catBadge">San sang lam quiz</span>
+                        <button class="btn" id="skipBtn" type="button">Bo qua</button>
+                    </div>
+                    <div class="progress-meta">
+                        <span id="progressText">0 / 0</span>
+                        <span id="scoreText">Diem: 0</span>
+                    </div>
+                    <div class="progress"><span id="progressBar"></span></div>
+                    <h2 class="question" id="questionText">Nhan "Bat dau de moi" de tao mot bo de random.</h2>
+                    <p class="sub" id="questionSub">Ban co the doi chu de truoc khi bat dau. Moi lan tao de se tron thu tu cau hoi.</p>
+                    <div class="options" id="options"></div>
+                    <div class="feedback" id="feedback">
+                        <strong id="feedbackTitle"></strong>
+                        <p id="feedbackBody"></p>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn primary" id="checkBtn" type="button">Kiem tra dap an</button>
+                        <button class="btn" id="nextBtn" type="button" disabled>Cau tiep theo</button>
+                    </div>
+                </section>
+
+                <section class="summary" id="summaryCard">
+                    <h2>Ban da hoan thanh bo de.</h2>
+                    <p id="summaryText"></p>
+                    <div class="summary-grid">
+                        <div class="summary-box"><strong id="sumScore">0</strong><span>Diem</span></div>
+                        <div class="summary-box"><strong id="sumCorrect">0</strong><span>Cau dung</span></div>
+                        <div class="summary-box"><strong id="sumPercent">0%</strong><span>Ty le dung</span></div>
+                    </div>
+                    <div class="review" id="reviewList"></div>
+                    <div class="quiz-actions">
+                        <button class="btn primary" id="restartBtn" type="button">Lam bo de moi</button>
+                        <a class="link-btn" href="java_interview_final.html">Mo bo cau hoi goc</a>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const categories = [
+            { id: 'all', label: 'Tat ca' },
+            { id: 'oop', label: 'OOP' },
+            { id: 'java', label: 'Java Core' },
+            { id: 'sql', label: 'SQL & DB' },
+            { id: 'ds', label: 'DS & Algo' },
+            { id: 'sdlc', label: 'SDLC' },
+            { id: 'spring', label: 'Spring Boot' }
+        ];
+
+        const questionBank = [
+            { cat: 'oop', q: '4 tinh chat co ban cua OOP la gi?', options: ['Dong goi, ke thua, da hinh, tru tuong', 'Dong goi, dong bo, ke thua, generic', 'Da hinh, stream, de quy, abstraction', 'Dong goi, interface, package, collection'], answer: 0, explain: '4 tinh chat cot loi cua OOP la encapsulation, inheritance, polymorphism va abstraction.' },
+            { cat: 'oop', q: 'Abstract class va interface khac nhau o diem nao?', options: ['Abstract class co the co state va constructor; interface uu tien hop dong hanh vi', 'Interface co constructor, abstract class thi khong', 'Interface chi implement duoc 1 lan', 'Abstract class ho tro da ke thua class'], answer: 0, explain: 'Abstract class phu hop khi can chia se state hoac logic mac dinh. Interface phu hop de dinh nghia hop dong.' },
+            { cat: 'oop', q: 'Overloading la gi?', options: ['Ghi de method cua class cha trong class con', 'Cung ten method nhung khac danh sach tham so', 'Method chi duoc goi boi super', 'Mot class implement nhieu interface'], answer: 1, explain: 'Overloading xay ra khi cung ten method nhung khac so luong hoac kieu tham so.' },
+            { cat: 'oop', q: 'Nguyen tac nao thuong duoc uu tien trong thiet ke hien dai?', options: ['Favor inheritance over composition', 'Favor composition over inheritance', 'Chi dung static method', 'Khong can abstraction'], answer: 1, explain: 'Composition thuong linh hoat hon va giam coupling hon so voi inheritance.' },
+
+            { cat: 'java', q: 'JDK, JRE, JVM co quan he dung nao?', options: ['JVM bao gom JRE va JDK', 'JDK bao gom JRE, JRE bao gom JVM', 'JRE bao gom JDK', 'Ca 3 doc lap nhau'], answer: 1, explain: 'JDK la bo cong cu phat trien, bao gom JRE. JRE la moi truong chay, bao gom JVM.' },
+            { cat: 'java', q: 'Trong Java, == va equals() khac nhau nhu the nao?', options: ['Khong khac nhau', '== so sanh gia tri, equals so sanh dia chi', '== so sanh tham chieu, equals so sanh logic theo class dinh nghia', 'equals chi dung cho number'], answer: 2, explain: 'Voi object, == thuong so sanh tham chieu con equals() so sanh tinh bang nhau theo logic cua class.' },
+            { cat: 'java', q: 'Java truyen tham so theo co che nao?', options: ['Pass by reference', 'Pass by pointer', 'Pass by value', 'Tuy theo primitive hay object'], answer: 2, explain: 'Java chi co pass by value. Voi object, no truyen ban sao cua tham chieu.' },
+            { cat: 'java', q: 'Khi noi chuoi trong vong lap, lua chon nao thuong hop ly nhat?', options: ['StringBuffer', 'StringBuilder', 'String', 'char[] co dinh'], answer: 1, explain: 'StringBuilder mutable va nhanh trong bai toan don luong, rat hop cho viec noi chuoi lap lai.' },
+            { cat: 'java', q: 'Checked exception la gi?', options: ['Ngoai le phai bat hoac khai bao throws', 'Ngoai le luon tu dong rollback', 'Ngoai le khong can xu ly', 'Ngoai le chi xuat hien khi compile'], answer: 0, explain: 'Checked exception duoc compiler kiem tra, vi du IOException, SQLException.' },
+            { cat: 'java', q: 'HashMap dung gi de tim dung key trong bucket?', options: ['toString()', 'compareTo()', 'hashCode() roi equals()', 'clone()'], answer: 2, explain: 'HashMap dung hashCode de xac dinh bucket va equals de xac nhan dung key can tim.' },
+            { cat: 'java', q: 'Functional interface la interface nhu the nao?', options: ['Co nhieu static method', 'Chi co mot abstract method', 'Chi co default method', 'Khong the dung voi lambda'], answer: 1, explain: 'Functional interface co dung 1 abstract method va la nen tang cua lambda expression.' },
+            { cat: 'java', q: 'Stream API phu hop nhat khi nao?', options: ['Khi can pipeline xu ly du lieu ro rang voi filter/map/collect', 'Khi can luu du lieu lau dai', 'Khi can thay the HashMap', 'Khi can viet SQL trong Java'], answer: 0, explain: 'Stream API dung de xu ly tap du lieu theo kieu khai bao, khong phai cau truc luu tru.' },
+
+            { cat: 'sql', q: 'INNER JOIN tra ve du lieu nao?', options: ['Tat ca dong cua bang trai', 'Tat ca dong cua bang phai', 'Chi cac dong khop o ca hai bang', 'Tat ca dong cua ca hai bang ke ca khong khop'], answer: 2, explain: 'INNER JOIN chi lay cac ban ghi co quan he khop giua hai bang.' },
+            { cat: 'sql', q: 'RIGHT JOIN co y nghia nao?', options: ['Lay tat ca dong bang trai', 'Lay tat ca dong bang phai va phan khop cua bang trai', 'Chi lay dong khong khop', 'Giong het HAVING'], answer: 1, explain: 'RIGHT JOIN doi xung voi LEFT JOIN. Nhieu team doi vi tri bang de viet thanh LEFT JOIN cho de doc.' },
+            { cat: 'sql', q: 'WHERE va HAVING khac nhau chu yeu o diem nao?', options: ['WHERE loc truoc GROUP BY, HAVING loc sau GROUP BY', 'HAVING luon nhanh hon WHERE', 'WHERE chi dung voi JOIN', 'HAVING khong dung voi aggregate'], answer: 0, explain: 'WHERE loc row truoc khi group, HAVING loc ket qua sau khi da group.' },
+            { cat: 'sql', q: 'Muc dich chinh cua index trong database la gi?', options: ['Lam bang nho hon', 'Tang toc truy van doc theo dieu kien hoac sap xep', 'Tu dong xoa du lieu trung', 'Bat transaction'], answer: 1, explain: 'Index tang toc SELECT nhung co trade-off la lam INSERT/UPDATE/DELETE cham hon.' },
+            { cat: 'sql', q: 'Atomicity trong ACID co nghia nao?', options: ['Moi transaction phai chay song song', 'Tat ca thao tac trong transaction cung thanh cong hoac cung rollback', 'Du lieu luon duoc sort', 'Moi query deu co index'], answer: 1, explain: 'Atomicity dam bao transaction khong o trang thai nua vung.' },
+            { cat: 'sql', q: 'UNION va UNION ALL khac nhau o diem nao?', options: ['UNION ALL khong ho tro nhieu bang', 'UNION giu ban ghi trung, UNION ALL loai bo trung', 'UNION loai bo trung, UNION ALL giu nguyen', 'Khong co khac biet'], answer: 2, explain: 'UNION ALL thuong nhanh hon vi khong can loai bo ban ghi trung lap.' },
+
+            { cat: 'ds', q: 'Big-O notation dung de mo ta dieu gi?', options: ['Mau giao dien cua ung dung', 'Do phuc tap thoi gian hoac bo nho khi input tang', 'Kich thuoc file Java', 'So luong class trong project'], answer: 1, explain: 'Big-O mo ta toc do tang cua tai nguyen can dung theo kich thuoc dau vao.' },
+            { cat: 'ds', q: 'Dieu kien bat buoc de dung Binary Search la gi?', options: ['Du lieu da duoc sap xep', 'Du lieu phai la LinkedList', 'Chi ap dung cho String', 'Mang phai co kich thuoc chan'], answer: 0, explain: 'Binary Search chi co y nghia khi du lieu da duoc sap xep theo thu tu phu hop.' },
+            { cat: 'ds', q: 'Stack va Queue khac nhau o diem nao?', options: ['Stack FIFO, Queue LIFO', 'Stack LIFO, Queue FIFO', 'Ca hai deu LIFO', 'Ca hai deu FIFO'], answer: 1, explain: 'Stack vao sau ra truoc, Queue vao truoc ra truoc.' },
+            { cat: 'ds', q: 'BFS thuong dung cau truc du lieu nao?', options: ['Queue', 'Stack', 'TreeMap', 'HashSet'], answer: 0, explain: 'BFS di theo tung lop nen thuong dung queue.' },
+            { cat: 'ds', q: 'Khi nao thuong uu tien ArrayList hon LinkedList?', options: ['Khi can truy cap theo index nhieu', 'Khi can xoa o giua rat nhieu va da co node', 'Khi khong co du lieu nao', 'Khi can tranh cap phat bo nho'], answer: 0, explain: 'ArrayList phu hop hon trong da so bai toan backend vi truy cap ngau nhien tot va locality tot.' },
+
+            { cat: 'sdlc', q: 'Waterfall phu hop nhat khi nao?', options: ['Yeu cau on dinh va it thay doi', 'Can phan hoi lien tuc moi ngay', 'Can release nhieu lan trong tuan', 'Du an chi co 1 dev'], answer: 0, explain: 'Waterfall manh khi requirement ro rang, it thay doi; yeu khi phai doi huong lien tuc.' },
+            { cat: 'sdlc', q: 'Scrum la gi so voi Agile?', options: ['Scrum la mot nguyen ly trong SQL', 'Scrum la mot framework pho bien de ap dung tu duy Agile', 'Scrum la ten khac cua Kanban', 'Agile la cong cu cua Scrum'], answer: 1, explain: 'Agile la tu duy linh hoat; Scrum la framework cu the voi sprint, role va ceremony.' },
+            { cat: 'sdlc', q: 'Kanban nhan manh dieu gi?', options: ['Gioi han WIP va toi uu flow cong viec', 'Chi code khong test', 'Chi lam viec theo thang', 'Khong can bang cong viec'], answer: 0, explain: 'Kanban tap trung vao flow lien tuc va quan ly Work In Progress.' },
+            { cat: 'sdlc', q: 'CI trong CI/CD thuong co y nghia nao?', options: ['Tu dong build va test khi code duoc merge', 'Chi deploy bang tay', 'Tu dong doi requirement', 'Tu dong tao database moi'], answer: 0, explain: 'Continuous Integration giup phat hien loi som thong qua build va test tu dong.' },
+
+            { cat: 'spring', q: 'Spring Boot giup giam cong suc nhat o diem nao?', options: ['Tu dong viet SQL cho moi bai toan', 'Auto-configuration va starter dependencies', 'Thay the Java thanh Python', 'Khong can build tool'], answer: 1, explain: 'Spring Boot noi bat nho auto-configuration, starter va embedded server.' },
+            { cat: 'spring', q: 'IoC va DI co quan he nhu the nao?', options: ['Khong lien quan', 'DI la mot cach de trien khai IoC', 'IoC la mot annotation', 'DI chi dung trong database'], answer: 1, explain: 'IoC la y tuong dao chieu dieu khien; DI la co che cap dependency tu ben ngoai vao object.' },
+            { cat: 'spring', q: '@RestController thuong duoc dung khi nao?', options: ['Khi tra view template HTML', 'Khi xay REST API tra JSON', 'Khi viet entity JPA', 'Khi cau hinh profile'], answer: 1, explain: '@RestController phu hop cho backend API vi tra du lieu truc tiep trong response body.' },
+            { cat: 'spring', q: '@SpringBootApplication thuong bao gom thanh phan nao?', options: ['@Entity, @Table, @Id', '@Configuration, @EnableAutoConfiguration, @ComponentScan', '@RequestBody, @Valid, @Bean', '@Controller, @Service, @Repository'], answer: 1, explain: '@SpringBootApplication la annotation tong hop cho class boot chinh.' },
+            { cat: 'spring', q: 'Kieu injection nao thuong duoc uu tien trong Spring?', options: ['Field injection', 'Constructor injection', 'Static injection', 'Manual new trong controller'], answer: 1, explain: 'Constructor injection ro rang dependency hon, de test hon va hop voi immutable field.' },
+            { cat: 'spring', q: '@Transactional thuong dung de lam gi?', options: ['Danh dau method chay trong transaction', 'Tao bean moi', 'Bat cache Redis', 'Dinh nghia route REST'], answer: 0, explain: '@Transactional giup gom nhieu thao tac data vao mot transaction logic.' }
+        ];
+
+        const els = {
+            chips: document.getElementById('chips'),
+            countSelect: document.getElementById('countSelect'),
+            poolStat: document.getElementById('poolStat'),
+            doneStat: document.getElementById('doneStat'),
+            correctStat: document.getElementById('correctStat'),
+            accStat: document.getElementById('accStat'),
+            startBtn: document.getElementById('startBtn'),
+            shuffleBtn: document.getElementById('shuffleBtn'),
+            skipBtn: document.getElementById('skipBtn'),
+            catBadge: document.getElementById('catBadge'),
+            progressText: document.getElementById('progressText'),
+            scoreText: document.getElementById('scoreText'),
+            progressBar: document.getElementById('progressBar'),
+            questionText: document.getElementById('questionText'),
+            questionSub: document.getElementById('questionSub'),
+            options: document.getElementById('options'),
+            feedback: document.getElementById('feedback'),
+            feedbackTitle: document.getElementById('feedbackTitle'),
+            feedbackBody: document.getElementById('feedbackBody'),
+            checkBtn: document.getElementById('checkBtn'),
+            nextBtn: document.getElementById('nextBtn'),
+            quizCard: document.getElementById('quizCard'),
+            summaryCard: document.getElementById('summaryCard'),
+            summaryText: document.getElementById('summaryText'),
+            sumScore: document.getElementById('sumScore'),
+            sumCorrect: document.getElementById('sumCorrect'),
+            sumPercent: document.getElementById('sumPercent'),
+            reviewList: document.getElementById('reviewList'),
+            restartBtn: document.getElementById('restartBtn')
+        };
+
+        let activeCategory = 'all';
+        let quiz = [];
+        let current = 0;
+        let selected = null;
+        let locked = false;
+        let score = 0;
+        let logs = [];
+
+        function shuffle(items) {
+            const arr = [...items];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function getPool() {
+            return activeCategory === 'all' ? [...questionBank] : questionBank.filter(q => q.cat === activeCategory);
+        }
+
+        function getCatLabel(id) {
+            return categories.find(cat => cat.id === id)?.label || id;
+        }
+
+        function updateStats() {
+            const pool = getPool();
+            const percent = logs.length ? Math.round((score / logs.length) * 100) : 0;
+            els.poolStat.textContent = pool.length;
+            els.doneStat.textContent = logs.length;
+            els.correctStat.textContent = score;
+            els.accStat.textContent = `${percent}%`;
+        }
+
+        function renderChips() {
+            els.chips.innerHTML = categories.map(cat => {
+                const count = cat.id === 'all' ? questionBank.length : questionBank.filter(q => q.cat === cat.id).length;
+                const active = cat.id === activeCategory ? 'active' : '';
+                return `<button type="button" class="chip ${active}" onclick="setCategory('${cat.id}')">${cat.label} (${count})</button>`;
+            }).join('');
+            updateStats();
+        }
+
+        function setCategory(id) {
+            activeCategory = id;
+            renderChips();
+            renderIdle('Nhan "Bat dau de moi" de tao bo de cho chu de nay.');
+        }
+
+        function renderIdle(message) {
+            quiz = [];
+            current = 0;
+            selected = null;
+            locked = false;
+            score = 0;
+            logs = [];
+            updateStats();
+            els.summaryCard.classList.remove('show');
+            els.quizCard.style.display = 'block';
+            els.catBadge.textContent = getCatLabel(activeCategory);
+            els.progressText.textContent = '0 / 0';
+            els.scoreText.textContent = 'Diem: 0';
+            els.progressBar.style.width = '0%';
+            els.questionText.textContent = 'San sang lam quiz.';
+            els.questionSub.textContent = message;
+            els.options.innerHTML = '<div class="feedback show"><strong>Chua co bo de.</strong><p>Chon chu de neu can, dat so cau roi bam "Bat dau de moi".</p></div>';
+            els.feedback.className = 'feedback';
+            els.checkBtn.disabled = true;
+            els.nextBtn.disabled = true;
+            els.skipBtn.disabled = true;
+        }
+
+        function startQuiz() {
+            const pool = shuffle(getPool());
+            const requested = Number(els.countSelect.value);
+            const take = requested >= pool.length ? pool.length : requested;
+            quiz = pool.slice(0, take);
+            current = 0;
+            selected = null;
+            locked = false;
+            score = 0;
+            logs = [];
+            updateStats();
+            if (!quiz.length) {
+                renderIdle('Chu de nay hien chua co cau hoi.');
+                return;
+            }
+            els.summaryCard.classList.remove('show');
+            els.quizCard.style.display = 'block';
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const item = quiz[current];
+            selected = null;
+            locked = false;
+            els.feedback.className = 'feedback';
+            els.checkBtn.disabled = false;
+            els.nextBtn.disabled = true;
+            els.skipBtn.disabled = false;
+            els.catBadge.textContent = `${getCatLabel(item.cat)} · Cau ${current + 1}`;
+            els.progressText.textContent = `${current + 1} / ${quiz.length}`;
+            els.scoreText.textContent = `Diem: ${score}`;
+            els.progressBar.style.width = `${Math.round((current / quiz.length) * 100)}%`;
+            els.questionText.textContent = item.q;
+            els.questionSub.textContent = 'Chon dap an dung nhat roi bam "Kiem tra dap an".';
+            els.options.innerHTML = item.options.map((option, idx) => `
+                <button type="button" class="option" onclick="pickOption(${idx})">
+                    <span><b>${String.fromCharCode(65 + idx)}</b><i style="font-style:normal">${option}</i></span>
+                </button>
+            `).join('');
+        }
+
+        function pickOption(index) {
+            if (locked) return;
+            selected = index;
+            [...els.options.children].forEach((node, idx) => node.classList.toggle('selected', idx === index));
+        }
+
+        function checkAnswer() {
+            if (locked || selected === null || !quiz.length) return;
+            const item = quiz[current];
+            const ok = selected === item.answer;
+            locked = true;
+            logs.push({ q: item.q, correct: ok, explain: item.explain });
+            if (ok) score += 1;
+            [...els.options.children].forEach((node, idx) => {
+                node.classList.remove('selected');
+                if (idx === item.answer) node.classList.add('correct');
+                if (idx === selected && idx !== item.answer) node.classList.add('wrong');
+                node.disabled = true;
+            });
+            els.feedback.className = `feedback show ${ok ? 'ok' : 'bad'}`;
+            els.feedbackTitle.textContent = ok ? 'Dung roi.' : 'Chua dung.';
+            els.feedbackBody.textContent = `${item.explain} Dap an dung la ${String.fromCharCode(65 + item.answer)}.`;
+            els.checkBtn.disabled = true;
+            els.nextBtn.disabled = false;
+            els.skipBtn.disabled = true;
+            els.scoreText.textContent = `Diem: ${score}`;
+            updateStats();
+        }
+
+        function nextQuestion() {
+            if (!quiz.length) return;
+            if (current === quiz.length - 1) {
+                showSummary();
+                return;
+            }
+            current += 1;
+            renderQuestion();
+        }
+
+        function skipQuestion() {
+            if (locked || !quiz.length) return;
+            logs.push({ q: quiz[current].q, correct: false, explain: 'Ban da bo qua cau nay. Nen xem lai trong bo cau hoi goc.' });
+            updateStats();
+            nextQuestion();
+        }
+
+        function showSummary() {
+            const total = quiz.length;
+            const percent = total ? Math.round((score / total) * 100) : 0;
+            const wrong = logs.filter(item => !item.correct).slice(0, 5);
+            els.quizCard.style.display = 'none';
+            els.summaryCard.classList.add('show');
+            els.sumScore.textContent = `${score}/${total}`;
+            els.sumCorrect.textContent = String(score);
+            els.sumPercent.textContent = `${percent}%`;
+            let message = 'Nen xem lai cac cau sai va lam them mot bo de nua.';
+            if (percent >= 85) message = 'Phan xa dang tot. Thu doi chu de hoac tang so cau de kho hon.';
+            else if (percent >= 65) message = 'Nen on them giai thich va tap tra loi thanh tieng.';
+            els.summaryText.textContent = `Ban dung ${score} tren ${total} cau. ${message}`;
+            els.reviewList.innerHTML = wrong.length
+                ? wrong.map(item => `<div class="review-item"><strong>${item.q}</strong><span>${item.explain}</span></div>`).join('')
+                : '<div class="review-item"><strong>Khong co cau sai trong bo de nay.</strong><span>Ban co the tron lai bo de hoac doi chu de de luyen tiep.</span></div>';
+        }
+
+        els.startBtn.addEventListener('click', startQuiz);
+        els.shuffleBtn.addEventListener('click', startQuiz);
+        els.checkBtn.addEventListener('click', checkAnswer);
+        els.nextBtn.addEventListener('click', nextQuestion);
+        els.skipBtn.addEventListener('click', skipQuestion);
+        els.restartBtn.addEventListener('click', startQuiz);
+
+        renderChips();
+        renderIdle('Ban co the chon chu de, so cau va bat dau ngay.');
+
+        window.setCategory = setCategory;
+        window.pickOption = pickOption;
+    </script>
+</body>
+</html>
